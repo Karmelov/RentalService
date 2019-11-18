@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using RentalAPI.Domain.Repositories;
 using RentalAPI.Infrastructure.Repositories;
 using RentalAPI.Infrastructure.Repositories.VolatileRepository;
+using AutoMapper;
 
 namespace RentalAPI
 {
@@ -33,7 +34,7 @@ namespace RentalAPI
             services.AddScoped<IUserRepository, VolatileUserRepository>();
             services.AddScoped<IVehicleRepository, VolatileVehicleRepository>();
             services.AddScoped<IRentalRepository, VolatileRentalRepository>();
-
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

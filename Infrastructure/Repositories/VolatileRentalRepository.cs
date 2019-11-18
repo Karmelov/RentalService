@@ -8,16 +8,23 @@ using System.Web;
 using System.Web.Http;
 using RentalAPI.Domain.Models;
 using RentalAPI.Domain.Repositories;
+using RentalAPI.Domain.Services;
+using RentalAPI.Resources;
 
 namespace RentalAPI.Infrastructure.Repositories
 {
     public class VolatileRentalRepository : IRentalRepository
     {
-        Dictionary<int, Rental> Instances;
+        static Dictionary<int, Rental> Instances;
+        static int Index;
 
         public VolatileRentalRepository()
         {
-            Instances = new Dictionary<int, Rental>();
+            if (Instances == null)
+            {
+                Instances = new Dictionary<int, Rental>();
+                Index = 1;
+            }
         }
 
         public async Task<IEnumerable<Rental>> ListAllAsync()
@@ -32,6 +39,47 @@ namespace RentalAPI.Infrastructure.Repositories
                 return null;
             }
             return Instances[id];
+        }
+
+        public async Task<RentalRepositoryResponse> SaveAsync(Rental rental) {
+            try
+            {
+                rental.Id = Index;
+                Instances[rental.Id] = rental;
+                Index++;
+            }
+            catch (Exception e)
+            {
+                return new RentalRepositoryResponse(e.Message);
+            }
+            RentalRepositoryResponse response = new RentalRepositoryResponse(rental);
+            return response;
+        }
+
+        public async Task<RentalRepositoryResponse> UpdateRental(Rental rental) {
+            try
+            {
+                Instances[rental.Id] = rental;
+            }
+            catch (Exception e)
+            {
+                return new RentalRepositoryResponse(e.Message);
+            }
+            return new RentalRepositoryResponse(rental);
+
+        }
+
+        public async Task<RentalRepositoryResponse> DeleteRental(int id) {
+            try
+            {
+                Instances.Remove(id);
+            }
+            catch (Exception e)
+            {
+                return new RentalRepositoryResponse(e.Message);
+            }
+            Rental none = null;
+            return new RentalRepositoryResponse(none);
         }
     }
 }

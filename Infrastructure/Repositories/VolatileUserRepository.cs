@@ -12,16 +12,20 @@ namespace RentalAPI.Infrastructure.Repositories.VolatileRepository
 {
     public class VolatileUserRepository : IUserRepository
     {
-        Dictionary<int,User> Instances;
+        static Dictionary<int,User> Instances;
 
         public VolatileUserRepository() {
-            Instances = new Dictionary<int, User>();
-            User testUser = new User{
-                Id = 1,
-                Name = "Chillax",
-                Password = "1234"
-            };
-            Instances[testUser.Id] = testUser;
+            if (Instances == null)
+            {
+                Instances = new Dictionary<int, User>();
+                User testUser = new User
+                {
+                    Id = 1,
+                    Name = "Chillax",
+                    Password = "1234"
+                };
+                Instances[testUser.Id] = testUser;
+            }
         }
         public async Task<IEnumerable<User>> ListAllAsync() {
             return Instances.Values.OrderBy(x => x.Id).ToList();

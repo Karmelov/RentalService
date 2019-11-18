@@ -26,7 +26,7 @@ namespace RentalAPI.Controllers
         }
         [HttpGet("{id}")]
         public async Task<Vehicle> GetById(int id) {
-            var vehicle = await _vehicleRepository.GetById(id);
+            var vehicle = await _vehicleRepository.GetByIdAsync(id);
             if (vehicle == null)
             {
                 Response.StatusCode = 404;
