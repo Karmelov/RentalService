@@ -11,7 +11,7 @@ namespace RentalAPI.Domain.Repositories
     {
         public Task<IEnumerable<Vehicle>> ListAllAsync();
         public Task<Vehicle> GetByIdAsync(int id);
-        public Task<Vehicle> GetAvailableVehicleAsync();
+        public Task<Vehicle> GetAvailableVehicleAsync(int vehicleType);
         public Task<VehicleRepositoryResponse> UpdateVehicle(Vehicle vehicle);
 
     }

@@ -14,46 +14,34 @@ namespace RentalAPI.Infrastructure.Repositories.VolatileRepository
 {
     public class VolatileVehicleRepository : IVehicleRepository
     {
-        static Dictionary<int, Vehicle> Instances;
-
-        public VolatileVehicleRepository()
-        {
-            if (Instances == null)
-            {
-                Instances = new Dictionary<int, Vehicle>();
-                Vehicle testVehicle = new Vehicle
-                {
-                    Id = 1,
-                    LicensePlate = "AB1234",
-                    CurrentlyRented = false
-                };
-
-                Instances[testVehicle.Id] = testVehicle;
-            }
-        }
         public async Task<IEnumerable<Vehicle>> ListAllAsync()
         {
-            return Instances.Values.OrderBy(x => x.Id).ToList();
+            Dictionary<int, Vehicle> dict = FakeDB.VehiclesTable();
+            return dict.Values.OrderBy(x => x.Id).ToList();
         }
+
         public async Task<Vehicle> GetByIdAsync(int id)
         {
-            if (!Instances.ContainsKey(id))
+            Dictionary<int, Vehicle> dict = FakeDB.VehiclesTable();
+            if (!dict.ContainsKey(id))
             {
                 return null;
             }
-            return Instances[id];
+            return dict[id];
         }
 
-        public async Task<Vehicle> GetAvailableVehicleAsync() {
-            var result = Instances.Where(x => x.Value.CurrentlyRented == false).FirstOrDefault().Value;
+        public async Task<Vehicle> GetAvailableVehicleAsync(int vehicleType) {
+            Dictionary<int, Vehicle> dict = FakeDB.VehiclesTable();
+            var result = dict.Where(x => x.Value.CurrentlyRented == false && x.Value.VehicleTypeId == vehicleType).FirstOrDefault().Value;
             return result;
         }
+
         public async Task<VehicleRepositoryResponse> UpdateVehicle(Vehicle vehicle)
         {
+            Dictionary<int, Vehicle> dict = FakeDB.VehiclesTable();
             try
             {
-
-                Instances[vehicle.Id] = vehicle;
+                dict[vehicle.Id] = vehicle;
             }
             catch (Exception e)
             {

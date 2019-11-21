@@ -15,38 +15,28 @@ namespace RentalAPI.Infrastructure.Repositories
 {
     public class VolatileRentalRepository : IRentalRepository
     {
-        static Dictionary<int, Rental> Instances;
-        static int Index;
-
-        public VolatileRentalRepository()
-        {
-            if (Instances == null)
-            {
-                Instances = new Dictionary<int, Rental>();
-                Index = 1;
-            }
-        }
-
         public async Task<IEnumerable<Rental>> ListAllAsync()
         {
-            List<Rental> result = Instances.Values.OrderBy(x => x.Id).ToList();
+            Dictionary<int, Rental> dict = FakeDB.RentalsTable();
+            List<Rental> result = dict.Values.OrderBy(x => x.Id).ToList();
             return result;
         }
 
         public async Task<Rental> GetById(int id) {
-            if (!Instances.ContainsKey(id))
+            Dictionary<int, Rental> dict = FakeDB.RentalsTable();
+            if (!dict.ContainsKey(id))
             {
                 return null;
             }
-            return Instances[id];
+            return dict[id];
         }
 
         public async Task<RentalRepositoryResponse> SaveAsync(Rental rental) {
+            Dictionary<int, Rental> dict = FakeDB.RentalsTable();
             try
             {
-                rental.Id = Index;
-                Instances[rental.Id] = rental;
-                Index++;
+                rental.Id = dict.Count + 1;
+                dict[rental.Id] = rental;
             }
             catch (Exception e)
             {
@@ -57,9 +47,10 @@ namespace RentalAPI.Infrastructure.Repositories
         }
 
         public async Task<RentalRepositoryResponse> UpdateRental(Rental rental) {
+            Dictionary<int, Rental> dict = FakeDB.RentalsTable();
             try
             {
-                Instances[rental.Id] = rental;
+                dict[rental.Id] = rental;
             }
             catch (Exception e)
             {
@@ -70,9 +61,10 @@ namespace RentalAPI.Infrastructure.Repositories
         }
 
         public async Task<RentalRepositoryResponse> DeleteRental(int id) {
+            Dictionary<int, Rental> dict = FakeDB.RentalsTable();
             try
             {
-                Instances.Remove(id);
+                dict.Remove(id);
             }
             catch (Exception e)
             {

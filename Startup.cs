@@ -34,6 +34,7 @@ namespace RentalAPI
             services.AddScoped<IUserRepository, VolatileUserRepository>();
             services.AddScoped<IVehicleRepository, VolatileVehicleRepository>();
             services.AddScoped<IRentalRepository, VolatileRentalRepository>();
+            services.AddScoped<IVehicleTypeRepository, VolatileVehicleTypeRepository>();
             services.AddAutoMapper(typeof(Startup));
         }
 

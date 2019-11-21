@@ -7,5 +7,8 @@ namespace RentalAPI.Resources
     {
         [Required]
         public DateTime? ReturnDate { get; set; }
+
+        [Required]
+        public string Token { get; set; }
     }
 }

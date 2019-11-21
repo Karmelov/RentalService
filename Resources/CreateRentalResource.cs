@@ -15,5 +15,11 @@ namespace RentalAPI.Resources
 
         [Required]
         public DateTime? Date { get; set; }
+
+        [Required]
+        public string Token { get; set; }
+
+        [Required]
+        public int? VehicleType { get; set; }
     }
 }
